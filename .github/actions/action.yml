@@ -1,0 +1,15 @@
+name: Gradle Cache
+description: Gradle Home Cache
+
+inputs: 
+  path:
+    description: "File to save"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/cache@937d24475381cd9c75ae6db12cb4e79714b926ed
+      with:
+        path: ${{ inputs.path }}
+        key: target-${{ inputs.path }}

@@ -1,0 +1,43 @@
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+name: Cache Bug
+
+jobs:
+  folder1:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: ./.github/actions
+        id: folder1
+        with:
+          path: './folder1/file_mod.sh'
+
+      - name: Create file if cache was not saved
+        if: steps.folder1.outputs.cache-hit != 'true'
+        run: ./folder1/file.sh
+
+      - uses: ./.github/actions
+        id: folder2
+        with:
+          path: './folder2/file_mod.sh'
+
+      - name: Create file if cache was not saved
+        if: steps.folder2.outputs.cache-hit != 'true'
+        run: ./folder2/file.sh
+
+      - uses: ./.github/actions
+        id: folder3
+        with:
+          path: './folder3/file_mod.sh'
+
+      - name: Create file if cache was not saved
+        if: steps.folder3.outputs.cache-hit != 'true'
+        run: ./folder3/file.sh
