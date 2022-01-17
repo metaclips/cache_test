@@ -9,7 +9,7 @@ on:
 name: Cache Bug
 
 jobs:
-  folder1:
+  recreate:
     runs-on: ubuntu-latest
 
     steps:
@@ -22,7 +22,8 @@ jobs:
 
       - name: Create file if cache was not saved
         if: steps.folder1.outputs.cache-hit != 'true'
-        run: ./folder1/file.sh
+        working-directory: folder1
+        run: RUNNER=1000 ./file.sh
 
       - uses: ./.github/actions
         id: folder2
@@ -30,8 +31,9 @@ jobs:
           path: './folder2/file_mod.sh'
 
       - name: Create file if cache was not saved
+        working-directory: folder2
         if: steps.folder2.outputs.cache-hit != 'true'
-        run: ./folder2/file.sh
+        run: RUNNER=10000 ./file.sh
 
       - uses: ./.github/actions
         id: folder3
@@ -39,5 +41,6 @@ jobs:
           path: './folder3/file_mod.sh'
 
       - name: Create file if cache was not saved
+        working-directory: folder3
         if: steps.folder3.outputs.cache-hit != 'true'
-        run: ./folder3/file.sh
+        run: RUNNER=100000 ./file.sh
