@@ -31,10 +31,12 @@ jobs:
         working-directory: folder1
         run: wc -c file_mod
 
-      - uses: ./.github/actions
+      - name: Store cache using a different ID
         id: folder2
+        uses: actions/cache@937d24475381cd9c75ae6db12cb4e79714b926ed
         with:
-          path: './folder2/file_mod'
+          path: ./folder2/file_mod
+          key: value8081190000-./folder2/file_mod
 
       - name: Create file if cache was not saved
         working-directory: folder2
