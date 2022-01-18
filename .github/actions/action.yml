@@ -5,11 +5,16 @@ inputs:
   path:
     description: "File to save"
     required: true
+outputs:
+  cache-hit:
+    description: "signifies if cache was hit"
+    value: ${{ steps.cache_hit.outputs.cache-hit }}
 
 runs:
   using: "composite"
   steps:
-    - uses: actions/cache@937d24475381cd9c75ae6db12cb4e79714b926ed
+    - id: cache_hit
+      uses: actions/cache@937d24475381cd9c75ae6db12cb4e79714b926ed
       with:
         path: ${{ inputs.path }}
-        key: target25-${{ inputs.path }}
+        key: value808119-${{ inputs.path }}

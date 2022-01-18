@@ -1,4 +1,5 @@
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
@@ -18,29 +19,29 @@ jobs:
       - uses: ./.github/actions
         id: folder1
         with:
-          path: './folder1/file_mod.sh'
+          path: './folder1/file_mod'
 
-      - name: Create file if cache was not saved
+      - name: Create file if cache was not saved and get file size
         if: steps.folder1.outputs.cache-hit != 'true'
         working-directory: folder1
-        run: RUNNER=1000 ./file.sh
+        run: ./file.sh && wc -c file_mod
+
+      - name: Get cached file size to check if it correlates with above step
+        if: steps.folder1.outputs.cache-hit == 'true'
+        working-directory: folder1
+        run: wc -c file_mod
 
       - uses: ./.github/actions
         id: folder2
         with:
-          path: './folder2/file_mod.sh'
+          path: './folder2/file_mod'
 
       - name: Create file if cache was not saved
         working-directory: folder2
         if: steps.folder2.outputs.cache-hit != 'true'
-        run: RUNNER=10000 ./file.sh
+        run: ./file.sh && wc -c file_mod
 
-      - uses: ./.github/actions
-        id: folder3
-        with:
-          path: './folder3/file_mod.sh'
-
-      - name: Create file if cache was not saved
-        working-directory: folder3
-        if: steps.folder3.outputs.cache-hit != 'true'
-        run: RUNNER=100000 ./file.sh
+      - name: Get retrieved file size
+        if: steps.folder2.outputs.cache-hit == 'true'
+        working-directory: folder2
+        run: wc -c file_mod
